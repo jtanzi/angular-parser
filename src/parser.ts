@@ -1,6 +1,7 @@
 import { HttpClient, HttpHandler } from '@angular/common/http';
 var json = require('./dictionary.json');
 
+
 export class Parser {
 
     results: any;
@@ -10,10 +11,17 @@ export class Parser {
         this.dictionary = json;
     }
 
+
     getDictionary(): void {
         console.dir(this.dictionary);
     }
 
+    /*
+        name: getWords
+        params: 
+            samples: The array of strings to test against.
+        Returns: An array containing the dictionary values matching the words that have been matched.
+    */
     getWords(samples: string[]): string[] {
         let regexString = '';
         Object.keys(this.dictionary).forEach((key) => {
@@ -29,10 +37,14 @@ export class Parser {
                 console.log(regex.exec(s)[0]);
                 words.push(s.match(regex)[0]);
             }
-            
-            // words.push(s.match(regex));
 
         });
-        return words;
+        const newWords = words.map((word) => {
+            return this.dictionary[word];
+        })
+        const uniqueWords = newWords.filter((elem, index, self) => {
+            return index === self.indexOf(elem);
+        });
+        return uniqueWords;
     }
 }
